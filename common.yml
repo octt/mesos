@@ -1,0 +1,5 @@
+---
+- name: All systems common role.
+  hosts: common
+  roles:
+    - common
