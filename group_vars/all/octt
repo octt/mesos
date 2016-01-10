@@ -1,0 +1,4 @@
+---
+octt:
+  zookeeper:
+    list: "zookeeper1:2181,zookeeper2:2181,zookeeper3:2181"

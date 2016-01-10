@@ -1,0 +1,147 @@
+---
+
+# Create variables for each server type, allowing for the simple consolidation of functions.
+- name: Set facts for mesos_servers
+  set_fact:
+    node_type: mesos_server
+    pkg_list: "[ 'marathon', 'mesosphere' ]"
+    mesos_zk_list: "[ '/etc/init/mesos-slave.override' ]"
+    mesos_hostname_files: "[ '/etc/mesos-master/ip', '/etc/mesos-master/hostname', '/etc/marathon/conf/hostname' ]"
+    services_list: "[ 'sookeeper', 'mesos-master', 'marathon' ]"
+  when:
+    mesos_server is defined and mesos_server
+
+
+- name: Set facts for mesos_agents
+  set_fact:
+    node_type: mesos_agent
+    pkg_list: "[ 'mesos' ]"
+    mesos_zk_list: "[ '/etc/init/zookeeper.override', '/etc/init/mesos-master.override' ]"
+    mesos_hostname_files: "[ '/etc/mesos-slave/ip', '/etc/mesos-slave/hostname' ]"
+    services_list: "[ 'mesos-slave' ]"
+  when:
+    mesos_agent is defined and mesos_agent
+
+- name: Import ubuntu keys.
+  apt_key:
+    keyserver=hkp://keyserver.ubuntu.com:80
+    id=E56151BF
+
+- name: Update Mesos Repository
+  apt_repository:
+    repo="deb http://repos.mesosphere.com/ubuntu trusty main"
+    update_cache="yes"
+
+- name: Install Mesosphere Packages.
+  apt:
+    name={{ item }}
+    state=latest
+    update_cache=yes
+  with_items: "{{ pkg_list }}"
+  when: mesos_server is defined and mesos_server or
+        mesos_agent is defined and mesos_agent
+
+- name: Create directory structure.
+  file:
+    name={{ item.name }}
+    owner=root
+    group=root
+    mode="0640"
+    state="directory"
+  with_items:
+    - { name: "/etc/mesos"  }
+    - { name: "/etc/marathon"  }
+    - { name: "/etc/marathon/conf"  }
+  when: mesos_server is defined and mesos_server
+
+- name: Create /etc/mesos/zk
+  copy:
+    content="zk://{{ octt.zookeeper.list }}/mesos"
+    dest="{{ item }}"
+    owner=root
+    group=root
+    mode="0640"
+  with_items:
+    - "/etc/mesos/zk"
+  when: mesos_server is defined and mesos_server or
+        mesos_agent is defined and mesos_agent
+
+- name: Create /etc/marathon/conf/master
+  copy:
+    content="zk://{{ octt.zookeeper.list }}/mesos"
+    dest="{{ item }}"
+    owner=root
+    group=root
+    mode="0640"
+  with_items:
+    - "/etc/marathon/conf/master"
+  when: mesos_server is defined and mesos_server
+
+- name: Create /etc/mesos/zk
+  copy:
+    content="zk://{{ octt.zookeeper.list }}/marathon"
+    dest="{{ item }}"
+    owner=root
+    group=root
+    mode="0640"
+  with_items:
+    - "/etc/marathon/conf/zk"
+  when: mesos_server is defined and mesos_server
+
+
+- name: Create /etc/zookeeper/conf/myid
+  copy:
+    content="{{ zookeeper.id }}"
+    dest="/etc/zookeeper/conf/myid"
+    owner=root
+    group=root
+    mode-"0640"
+  when: mesos_server is defined and mesos_server
+
+- name: Creat /etc/zookeeper/conf/zoo.cfg
+  copy:
+    src="zoo.cfg"
+    dest="/etc/zookeeper/conf/zoo.cfg"
+    owner=root
+    group=root
+    mode="0644"
+  when: mesos_server is defined and mesos_server
+
+- name: Create /etc/mesos-master/quorum
+  copy:
+    content="2"
+    dest="/etc/mesos-master/quorum"
+    owner=root
+    group=root
+    mode="0640"
+  when: mesos_server is defined and mesos_server
+
+- name: Create /etc/mesos-master/ip & /etc/mesos-master/hostname
+  copy:
+    content="{{ ansible_default_ipv4.address }}"
+    dest={{ item }}
+    owner=root
+    group=root
+    mode="0640"
+  with_items: mesos_hostname_files
+  when: mesos_server is defined and mesos_server or
+        mesos_agent is defined and mesos_agent
+
+- name: Make services manual
+  copy:
+    content="manual"
+    dest="{{ item }}"
+    owner=root
+    group=root
+    mode="0640"
+  with_items: "{{ mesos_zk_list }}"
+  when: mesos_server is defined and mesos_server or
+        mesos_agent is defined and mesos_agent
+
+- name: Start Services
+  service:
+    name="{{ item }}"
+    state="started"
+  with_items: services_list
+  when: mesos_server is defined and mesos_server or
+        mesos_agent is defined and mesos_agent

@@ -1,0 +1,5 @@
+---
+- name: Mesos server role.
+  hosts: mesos_servers
+  roles:
+    - mesos

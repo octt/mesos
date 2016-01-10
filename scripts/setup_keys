@@ -1,0 +1,15 @@
+#!/bin/sh
+
+_InventoryFile=${HOME}/ansible-octt/lab200/hosts
+
+/usr/local/bin/ansible all -i ${_InventoryFile} --list-hosts | \
+while read input
+do
+
+  cat <<_EOD_
+  Working on host ${input}
+_EOD_
+
+  /usr/bin/ssh-copy-id -i ${HOME}/.ssh/id_rsa ${input}
+
+done

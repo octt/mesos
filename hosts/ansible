@@ -1,0 +1,17 @@
+[common]
+lab201
+lab202
+lab203
+lab204
+lab205
+lab206
+
+[mesos_servers]
+lab201
+lab202
+lab203
+
+[mesos_agents]
+mesosagent1
+mesosagent2
+mesosagent3
