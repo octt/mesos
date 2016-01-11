@@ -1,0 +1,5 @@
+---
+- name: All systems common role.
+  hosts: all
+  roles:
+    - dump_vars

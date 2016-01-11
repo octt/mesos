@@ -1,4 +1,42 @@
 ---
-octt:
-  zookeeper:
-    list: "zookeeper1:2181,zookeeper2:2181,zookeeper3:2181"
+
+# Customize this section according to the assigned IP Addresses in your network.
+#
+#   Define Master Servers
+#     Zookeeper Masters - zookeeper(1-3)
+#     Mesos Masters - mesosmaster(1-3)
+#     Marathon Masters - marathon(1-3)
+#     Mesos Agents - mesosagent(1-3)
+#     Nameserver for DNS - ns1
+octt_facts:
+  hostfile_list:
+    - "192.168.1.4     lab201 zookeeper1 mesosmaster1 marathon1 ns1"
+    - "192.168.1.49    lab202 zookeeper2 mesosmaster2 marathon2"
+    - "192.168.1.50    lab203 zookeeper3 mesosmaster3 marathon3"
+    - "192.168.1.51    lab204 mesosagent1"
+    - "192.168.1.52    lab205 mesosagent2"
+    - "192.168.1.53    lab206 mesosagent3"
+
+# Customize local network and DNS configuration.
+#
+#   base_address - dns forward network
+#   base_address_rev - reverse dns network 
+#   domain_name - name your domain
+  network:
+    base_address: "10.0.5"
+    base_address_rev: "5.0.10"
+    domain_name: "domain.local"
+
+# Customize configuration for building install/kickstart server
+  media:
+    cdrom: "/dev/cdrom"
+    tmpmntdir: "/mnt"
+    vrfyfile: "/.disk/info"
+    vrfylabel: 'Ubuntu-Server 15.10 "Wily Werewolf" - Release amd64'
+    isodir: "/media/iso"
+    isofilename: "ubuntu-15.10-server.iso"
+    ubuntumnt: "/ubuntu-15.10-server"
+
+# Zookeeper configuration
+  zookeeper_list:
+    zklist: "zk://10.0.5.20:2181,10.0.5.21:2181,10.0.5.22:2181"

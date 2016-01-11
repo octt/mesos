@@ -1,0 +1,16 @@
+---
+user_list:
+  - {
+      name: "Korben",
+      uid: "501",
+      gid: "501",
+      home: "/home/kkirscht",
+      state: "present"
+    }
+  - {
+      name: "Brendan",
+      uid: "502",
+      gid: "502",
+      home: "/home/brendan",
+      state: "present"
+    }

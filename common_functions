@@ -1,0 +1,51 @@
+#/usr/bin/script /var/tmp/output
+
+# Setup default trap handling for any unexpected errors.
+  #set -e
+  #trap 'abort "A critical failure has occurred."' EXIT
+
+_pause=5 ; export _pause
+
+. ${_dirname}/scripts/network_information_functions
+
+################################################################################
+# Abort
+#
+# Function for handling serious errors.
+#
+abort()
+{
+
+  _message=${1}
+  
+  /bin/cat <<_EOD_
+  
+Error:
+
+  ${_message}
+
+  Aborting . . .
+  
+  
+_EOD_
+
+  exit 1
+
+}
+
+clearscreen()
+{
+  /usr/bin/clear
+  return
+}
+
+pause()
+{
+  [ -n ${1} ] && _message=${1}
+  _undefined="N/A"
+  /usr/bin/printf "(%s) Paused for %s seconds\n" "${_message-${_undefined}}" "${_pause}" 
+
+  /bin/sleep ${_pause}
+  
+  return
+}

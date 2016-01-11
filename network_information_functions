@@ -1,0 +1,151 @@
+################################################################################
+get_altInterface()
+{
+  # root@repo02:~# lshw -short -class network
+  # H/W path             Device      Class      Description
+  # =======================================================
+  # /0/100/15/0          ens160      network    VMXNET3 Ethernet Controller
+  # /0/100/16/0          ens192      network    VMXNET3 Ethernet Controller  
+  
+  _nicCount=$(lshw -short -class network | egrep network | wc -l)
+  if [ ${_nicCount} -gt 2 ]
+  then
+    /usr/bin/printf "More than two network interfaces\n"
+    exit
+  elif [ ${_nicCount} -lt 2 ]
+  then
+    /usr/bin/printf "More than two network interfaces\n"
+    exit
+  fi
+  _altInterface=$(/usr/bin/lshw -short -class network | egrep network | \
+                  egrep -v ${1} | \
+                  awk '{print $2}' )
+                  
+  [ -n ${debug-''} ] && /usr/bin/printf "%s" "${_altInterface}"
+  
+  return
+}
+
+################################################################################
+get_defaultInterface()
+{
+  /bin/netstat -r | egrep '^default' | awk '{print $8}'
+  return 0
+}
+
+################################################################################
+get_defaultGateway()
+{
+  /bin/netstat -r | egrep '^default' | awk '{print $2}'
+  return 0
+}
+
+################################################################################
+get_defaultIP()
+{
+  ip -o addr show dev ens160 | egrep 'brd' | awk '{print $4}' | cut -f1 -d'/' 
+  return 0
+}
+
+################################################################################
+test_Ping()
+{
+  /bin/ping -c 1 ${1}
+  return ${?}
+}
+
+################################################################################
+setupAltInterface()
+{
+
+  _defaultInterface=$(get_defaultInterface)
+  _defaultIP=$(get_defaultIP "${_defaultInterface}")
+  _defaultGateway=$(get_defaultGateway)
+  _altInterface=$(get_altInterface "${_defaultInterface}")
+  
+  
+
+  if [ $(echo ${_defaultIP} | cut -f1 -d'.') -eq 192 ]
+  then
+  
+    [ -n ${debug-''} ] && /usr/bin/printf "192\n"
+    _altBaseNet="10.0.5"
+    _altBaseRev="5.0.10"
+
+  else
+    [ -n ${debug-''} ] && /usr/bin/printf "10\n"
+    _altBaseNet="192.168.5"
+    _altBaseRev="5.168.192"
+    
+  fi
+  
+  /bin/cat > ~/ip.db <<_EOD_
+${_altBaseNet}.1    ${_altInterface} primary
+${_altBaseNet}.11   guest1
+_EOD_
+  
+  /bin/cat > ~/ansible-octt/group_vars/all/octt <<_EOD_
+---
+octt_facts:
+  network:
+    base_address: "${_altBaseNet}"
+    base_address_rev: "${_altBaseRev}"
+    domain_name: "domain.local"
+    altNIC: "${_altInterface}"
+    altIP: "${_altBaseNet}.1"
+    altBroadcast: "${_altBaseNet}.255"
+    primaryNIC: "${_defaultInterface}"
+    primaryIP: "${_defaultIP}"
+    nameserver1: "${_altBaseNet}.1"
+  media:
+    cdrom: "/dev/cdrom"
+    tmpmntdir: "/mnt"
+    vrfyfile: "/.disk/info"
+    vrfylabel: 'Ubuntu-Server 15.10 "Wily Werewolf" - Release amd64'
+    isodir: "/media/iso"
+    isofilename: "ubuntu-15.10-server.iso"
+    ubuntumnt: "${isodir}/ubuntu-15.10-server"
+  zookeeper:
+    zklist: "zk://10.0.5.20:2181,10.0.5.21:2181,10.0.5.22:2181"
+#    zk://zoomaster01:2181,zoomaster02:2181,zoomaster03:2181/mesos
+_EOD_
+
+  pause "network_information_functions.setupAltInterface.setup.octt_facts"
+  
+  clearscreen
+
+  /usr/bin/printf "Testing connectivity to default gateway %s\n\n" \
+                ${_defaultGateway}
+  test_Ping ${_defaultGateway}
+  /usr/bin/printf "Gateway test succeeded\n"
+  
+  pause "network_information_functions.setupAltInterface.testIP.gatewaytest"
+
+  clearscreen
+
+  /usr/bin/printf "Testing primary interface connectivity %s.\n\n" \
+                 ${_defaultIP}
+  test_Ping ${_defaultIP}
+  /usr/bin/printf "Testing primary interface connectivity succeeded.\n"
+
+  pause "network_information_functions.setupAltInterface.testping.defaultIP"
+
+  clearscreen
+
+  /usr/bin/printf "interface %s\n" "${_defaultInterface}"
+  /usr/bin/printf "ip %s\n" "${_defaultIP}"
+  /usr/bin/printf "gateway %s\n" "${_defaultGateway}"
+  /usr/bin/printf "alt interface %s\n" "${_altInterface}"
+  pause "network_information_functions.setupAltInterface.network.info"
+  
+  clearscreen
+  
+  _insideIP=$(egrep primary ~/ip.db | awk '{print $1}')
+  cd ~/ansible-octt
+  ansible-playbook repository.yml -i ./ansible_hosts -D -bu octt \
+       --extra-vars debug=true \
+       --extra-vars altInterface_name=${_altInterface} \
+       --extra-vars altInterface_ip="${_insideIP}" \
+       | egrep -v 'skipped'
+  pause "network_information_functions.setupAltInterface.repository.yml"
+}

@@ -8,17 +8,10 @@
     group=root
     mode="0600"
 
-- name: Add Begin Tag in /etc/hosts
-  lineinfile:
-    line="{{ item }}"
-    insertafter=EOF
-    dest="/etc/hosts"
-  with_items:
-    - "# # # BEGIN ANSIBLE /etc/hosts # # #"
-    - "192.168.1.4     lab201 zookeeper1"
-    - "192.168.1.49    lab202 zookeeper2"
-    - "192.168.1.50    lab203 zookeeper3"
-    - "192.168.1.51    lab204 mesosagent1"
-    - "192.168.1.52    lab205 mesosagent2"
-    - "192.168.1.53    lab206 mesosagent3"
-    - "# # # END ANSIBLE /etc/hosts # # #"
+- name: Create /etc/hosts
+  template:
+    src="hosts.j2"
+    dest="/tmp/hosts"
+    owner=root
+    group=root
+    mode="0644"

@@ -1,7 +1,36 @@
-#!/bin/sh
+#!/bin/bash
 
-_InventoryFile=${HOME}/ansible-octt/lab200/hosts
+# setup_keys
+#
+# Generate SSH keys for Ansible communication.
+#
 
+# Path to the RSA keyfile.
+_RSAKeyFile="${HOME}/.ssh/id_rsa" ; export _RSAKeyFile
+
+# Go to script directory.
+cd $(dirname ${0})
+cd ..
+
+# Derive the relative path to the Inventory file based on the current directory.
+_InventoryFile=$(pwd)/hosts
+
+# Function to generate new id_rsa keyfile.
+function generateKeyfile
+{
+  /usr/bin/ssh-keygen -b 8192 -N '' -C "Ansible Key"
+
+  return ${?}
+}
+
+# If the RSA Keyfile does not exist, call the function to create the file.
+if [ ! -f ${_RSAKeyFile} ]
+then
+  ls -l  ${_RSAKeyFile}
+  generateKeyFile
+fi
+
+# Parse the list of Ansibl hosts and copy the id_rsa SSH key.
 /usr/local/bin/ansible all -i ${_InventoryFile} --list-hosts | \
 while read input
 do
@@ -13,3 +42,5 @@ _EOD_
   /usr/bin/ssh-copy-id -i ${HOME}/.ssh/id_rsa ${input}
 
 done
+
+exit 0

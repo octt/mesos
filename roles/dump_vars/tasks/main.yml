@@ -1,0 +1,14 @@
+---
+- name:
+  debug: msg="Role to dump all variables."
+  
+- name: Dump all vars
+  template:
+    src=dumpall.j2
+    dest=/tmp/ansible.{{ ansible_hostname }}
+
+- name: Fetch dumped vars
+  fetch:
+    src="/tmp/ansible.{{ ansible_hostname }}"
+    dest="/tmp/dumped_vars/ansible.{{ ansible_hostname }}"
+    flat=yes

@@ -1,0 +1,255 @@
+#!/bin/sh
+
+# setup (version 0.1)
+_version='0.1' ; export _version
+
+################################################################################
+# Author: Korben Dorado-Kirscht
+#         Instructor - Orange County Technical Trainers
+# Date:   December 2015
+#
+# Purpose:
+#
+# This secondary script pulls more of the the necessary files from the 
+# OCTT downloads repo# and installs additional components for the 
+# current class.  OCTT-1101, Automating Ubuntu Linux Installations -
+# Jumpstart Workshop
+################################################################################
+
+runCommonRole()
+{
+
+  clearscreen
+
+  /bin/cat <<_EOD_
+
+  Configuring the DNS Client
+  
+_EOD_
+
+  pause
+
+  cd ~/ansible-octt
+
+  ansible-playbook dns_client.yml -i ~/ansible-octt/ansible_hosts -D -bu octt --extra-vars debug=true
+
+  pause
+
+  return
+}
+
+################################################################################
+# Setup the necessary files for ssh communications.
+setup_dotssh_dir()
+{
+
+  [ -n ${debug-''} ] && /usr/bin/printf "Setup %s ssh directory\n"
+  
+  if [ ! -d "${_sshdir}" ]
+  then
+    /usr/bin/printf "\n\nCreating .ssh directory %s\n\n" "${_sshdir}"
+    set -x
+    /bin/mkdir ${_sshdir}
+    chmod 0700 ${_sshdir}
+    set +x
+  fi
+  
+  if [ ! -f "${_sshdir}/id_rsa" ]
+  then
+    /usr/bin/printf "\n\nCreate key %s\n\n" "${_sshdir}/id_rsa"
+    set -x
+    ssh-keygen -q -N '' -C "Orange County Technical Trainers" \
+    -f ${_sshdir}/id_rsa
+    set +x
+  fi
+  
+  if [ ! -f "${_sshdir}/authorized_keys" ]
+  then
+    /usr/bin/printf "\n\nCreate authorized_keys %s\n\n" \
+                    "${_sshdir}/authorized_keys"
+    [ -n ${debug-''} ] && set -x
+    cp ${_sshdir}/id_rsa.pub ${_sshdir}/authorized_keys
+    [ -n ${debug-''} ] && set +x
+  fi
+
+  if [ ! -f "${_sshdir}/.ssh/config" ]
+  then
+      /usr/bin/printf "\n\nCreate ssh config file %s\n\n" \
+                      "${_sshdir}/config"
+    
+    /bin/cat <<_EOD_ > ${_sshdir}/config
+Host *
+    StrictHostKeyChecking no
+_EOD_
+  fi
+  /bin/cat ${_sshdir}/config
+  
+  return
+}
+
+
+
+
+
+
+################################################################################
+main()
+{
+  # Setup traps for any unexpected errors.
+  set -e
+  trap 'abort "A critical failure has occurred."' EXIT
+
+  clearscreen
+  
+  /usr/bin/printf "\n\nCopyright 2015 - Orange County Technical Trainers\n\n"
+  
+  pause "setup-2.main"
+
+  #  /usr/bin/git clone git://github.com/ansible/ansible.git --recursive
+
+  # Call the function to setup the internal interface.
+  setupAltInterface
+  
+  pause
+
+  # Create the Ansible Hosts File.
+  /bin/cat > ~/ansible-octt/ansible_hosts <<_EOD_
+[localhost]
+127.0.0.1
+
+[dns_servers]
+${_defaultIP}
+
+[repository_servers]
+${_defaultIP}
+
+[install_servers]
+${_defaultIP}
+
+[proxy_servers]
+${_defaultIP}
+
+[haproxy_servers]
+${_defaultIP}
+
+[ssh_relay_servers]
+${_defaultIP}
+
+[zookeeper_servers]
+zoomaster01
+zoomaster02
+zoomaster03
+
+[mesos_agents]
+mesosagent01
+mesosagent02
+mesosagent03
+
+_EOD_
+
+
+
+  # Generic Ansible hosts file for testing.
+  /bin/cat <<_EOD_ > ~/ansible_hosts
+127.0.0.1
+${_defaultIP}
+_EOD_
+
+  # Location of the default SSH directory
+  _sshdir="/home/octt/.ssh" ; export _sshdir
+
+  # Call function to setup SSH directory.
+  setup_dotssh_dir
+  
+  pause
+
+  # Validate the .ssh directory.
+  [ ! -d ${_sshdir} ] && abort "${_sshdir} missing."
+  [ ! -f ${_sshdir}/id_rsa ] && abort "${_sshdir}/id_rsa missing."
+  [ ! -f ${_sshdir}/id_rsa.pub ] && abort "${_sshdir}/id_rsa.pub missing."
+  [ ! -f ${_sshdir}/authorized_keys ] \
+         && abort "${_sshdir}/authorized_keys missing."
+  [ ! -f ${_sshdir}/config ] && abort "${_sshdir}/config missing."
+  
+  pause
+
+  clearscreen
+  /usr/bin/printf "\n\nTesting ansible connectivity.\n\n"
+  /usr/local/bin/ansible all -i ~/ansible_hosts -m ping
+
+  pause
+
+  clearscreen
+
+  /bin/cat <<_EOD_
+
+  Updating and upgrading system packages.  This may take some time.
+  
+_EOD_
+
+  pause
+
+  #/usr/bin/printf "\n\nUpdating Package Repo\n\n"
+  #/usr/bin/sudo /usr/bin/apt-get update \
+  #              2>&1 | /usr/bin/tee -a /var/tmp/apt-update.log 
+  
+  #/usr/bin/printf "\n\nUpgrading Software\n\n"
+  #/usr/bin/sudo /usr/bin/apt-get upgrade -y \
+  #              2>&1 | /usr/bin/tee -a /var/tmp/apt-update.log 
+
+  pause
+
+  clearscreen
+
+  /bin/cat <<_EOD_
+
+  Setting up the repository services.
+  
+_EOD_
+
+  pause
+
+  cd ~/ansible-octt
+
+  ansible-playbook repository.yml -i ~/ansible-octt/ansible_hosts -D -bu octt --extra-vars debug=true
+
+  pause
+
+  clearscreen
+
+  /bin/cat <<_EOD_
+
+  Installing & Configuring the DNS Server
+  
+_EOD_
+
+  pause
+
+  cd ~/ansible-octt
+
+  ansible-playbook dns_server.yml -i ~/ansible-octt/ansible_hosts -D -bu octt --extra-vars debug=true
+
+  pause
+
+
+  return
+}
+
+################################################################################
+# Setup stuff prior to calling main().
+
+
+  # What directory are we running from to use as a location of reference.
+  _dirname=$( cd ${0} ; pwd | \
+             /bin/sed 's%/scripts/installation_scripts%%')
+  export _dirname
+  [ -n ${debug-''} ] && /usr/bin/printf "Dir: %s\n" "${_dirname}"
+  
+  . ${_dirname}/scripts/common_functions
+  
+  main
+  
+  pause "setup-2.pre-main"
+  
+  trap '' EXIT
+  exit
