@@ -6,7 +6,7 @@
 
 _pause=5 ; export _pause
 
-. ${_dirname}/scripts/network_information_functions
+. ${_Repo_Dir}/scripts/network_information_functions
 
 ################################################################################
 # Abort
