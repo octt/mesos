@@ -132,14 +132,18 @@ main()
 ################################################################################
 # Setup stuff prior to calling main().
 
-  /usr/bin/sudo /bin/cat > /etc/sudoers.d/octt <<_EOD_
+  /bin/cat > /tmp/sudoers.octt <<_EOD_
 # Give root privs to octt
 octt  ALL=(ALL) NOPASSWD:ALL
 _EOD_
 
-  sudo /usr/bin/apt-get update
-  /usr/bin/apt-get upgrade -y
-  /usr/bin/apt-get install -y ansible
+  /usr/bin/sudo /bin/cp /tmp/sudoers.octt /etc/sudoers.d/octt
+  /usr/bin/sudo /bin/chown root:root /etc/sudoers.d/octt
+  /usr/bin/sudo /bin/chmod 0600 /etc/sudoers.d/octt
+
+  /usr/bin/sudo /usr/bin/apt-get update
+  /usr/bin/sudo /usr/bin/apt-get upgrade -y
+  /usr/bin/sudo /usr/bin/apt-get install -y ansible
 
   if [ ! -d ${HOME}/mesos ]
   then
