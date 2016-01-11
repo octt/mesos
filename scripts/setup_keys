@@ -51,7 +51,7 @@ then
 fi
 
 # Parse the list of Ansibl hosts and copy the id_rsa SSH key.
-/usr/local/bin/ansible all -i ${_InventoryFile} --list-hosts | \
+/usr/bin/ansible all -i ${_InventoryFile} --list-hosts | \
 while read input
 do
 
