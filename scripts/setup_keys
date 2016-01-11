@@ -16,7 +16,7 @@ do
 
 done
 
-if ( "${_RSAKeyFile}" == "" )
+if [ "${_RSAKeyFile}" == "" ]
 then
   /usr/bin/printf "No hostfile specified\n"
   exit 1
