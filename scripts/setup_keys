@@ -5,8 +5,28 @@
 # Generate SSH keys for Ansible communication.
 #
 
-# Path to the RSA keyfile.
-_RSAKeyFile="${HOME}/.ssh/id_rsa" ; export _RSAKeyFile
+while getopts "i:" opt
+do
+  case $opt in
+    i) _RSAKeyFile=${OPTARG}
+       ;;
+    *) /usr/bin/printf "Invalid arguments\n"
+       exit 1
+  esac
+
+done
+
+if [ ${_RSAKeyFile} == "" ]
+then
+  /usr/bin/printf "No hostfile specified\n"
+  exit 1
+fi
+
+if [ ! -e ${_RSAKeyFile} ]
+then
+  /usr/bin/printf "Hostfile %s does not exist.\n" "${_RSAKeyFile}"
+  exit 1
+fi
 
 # Go to script directory.
 cd $(dirname ${0})
