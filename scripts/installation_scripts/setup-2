@@ -23,15 +23,15 @@ runCommonRole()
 
   /bin/cat <<_EOD_
 
-  Configuring the DNS Client
+  Running the common role.
   
 _EOD_
 
   pause
 
-  cd ~/ansible-octt
+  cd ${_Repo_Dir}
 
-  ansible-playbook dns_client.yml -i ~/ansible-octt/ansible_hosts -D -bu octt --extra-vars debug=true
+  ansible-playbook common.yml -i ${_Repo_Dir}/hosts/ -D -bu ${USER}
 
   pause
 
@@ -105,58 +105,10 @@ main()
   
   pause "setup-2.main"
 
-  #  /usr/bin/git clone git://github.com/ansible/ansible.git --recursive
-
-  # Call the function to setup the internal interface.
-  setupAltInterface
-  
-  pause
-
-  # Create the Ansible Hosts File.
-  /bin/cat > ~/ansible-octt/ansible_hosts <<_EOD_
-[localhost]
-127.0.0.1
-
-[dns_servers]
-${_defaultIP}
-
-[repository_servers]
-${_defaultIP}
-
-[install_servers]
-${_defaultIP}
-
-[proxy_servers]
-${_defaultIP}
-
-[haproxy_servers]
-${_defaultIP}
-
-[ssh_relay_servers]
-${_defaultIP}
-
-[zookeeper_servers]
-zoomaster01
-zoomaster02
-zoomaster03
-
-[mesos_agents]
-mesosagent01
-mesosagent02
-mesosagent03
-
-_EOD_
-
-
-
-  # Generic Ansible hosts file for testing.
-  /bin/cat <<_EOD_ > ~/ansible_hosts
-127.0.0.1
-${_defaultIP}
-_EOD_
+  /usr/bin/clear ; ${_Repo_Dir}/scripts/setup_keys -i localhost
 
   # Location of the default SSH directory
-  _sshdir="/home/octt/.ssh" ; export _sshdir
+  _sshdir="${HOME}/.ssh" ; export _sshdir
 
   # Call function to setup SSH directory.
   setup_dotssh_dir
@@ -173,64 +125,6 @@ _EOD_
   
   pause
 
-  clearscreen
-  /usr/bin/printf "\n\nTesting ansible connectivity.\n\n"
-  /usr/local/bin/ansible all -i ~/ansible_hosts -m ping
-
-  pause
-
-  clearscreen
-
-  /bin/cat <<_EOD_
-
-  Updating and upgrading system packages.  This may take some time.
-  
-_EOD_
-
-  pause
-
-  #/usr/bin/printf "\n\nUpdating Package Repo\n\n"
-  #/usr/bin/sudo /usr/bin/apt-get update \
-  #              2>&1 | /usr/bin/tee -a /var/tmp/apt-update.log 
-  
-  #/usr/bin/printf "\n\nUpgrading Software\n\n"
-  #/usr/bin/sudo /usr/bin/apt-get upgrade -y \
-  #              2>&1 | /usr/bin/tee -a /var/tmp/apt-update.log 
-
-  pause
-
-  clearscreen
-
-  /bin/cat <<_EOD_
-
-  Setting up the repository services.
-  
-_EOD_
-
-  pause
-
-  cd ~/ansible-octt
-
-  ansible-playbook repository.yml -i ~/ansible-octt/ansible_hosts -D -bu octt --extra-vars debug=true
-
-  pause
-
-  clearscreen
-
-  /bin/cat <<_EOD_
-
-  Installing & Configuring the DNS Server
-  
-_EOD_
-
-  pause
-
-  cd ~/ansible-octt
-
-  ansible-playbook dns_server.yml -i ~/ansible-octt/ansible_hosts -D -bu octt --extra-vars debug=true
-
-  pause
-
 
   return
 }
@@ -238,14 +132,38 @@ _EOD_
 ################################################################################
 # Setup stuff prior to calling main().
 
+  /usr/bin/apt-get update
+  /usr/bin/apt-get upgrade -y
+  /usr/bin/apt-get install -y ansible
 
-  # What directory are we running from to use as a location of reference.
-  _dirname=$( cd ${0} ; pwd | \
-             /bin/sed 's%/scripts/installation_scripts%%')
-  export _dirname
-  [ -n ${debug-''} ] && /usr/bin/printf "Dir: %s\n" "${_dirname}"
+  if [ ! -d ${HOME}/mesos ]
+  then
+    /usr/bin/printf "No OCTT-Mesos Repository Found at %s\n" \
+      "${HOME}/mesos"
+    exit 1
+  else
+    _Repo_Dir="${HOME}/mesos" ; export _Repo_Dir
+    cd ${_Repo_Dir}
+  fi
   
-  . ${_dirname}/scripts/common_functions
+# Setup the Ansible path.
+  if [ -x /usr/local/bin/ansible ]
+  then
+    _ansibleExec="/usr/local/bin/ansible" ; export _ansibleExec
+  fi
+  
+  if [ -x /usr/local/bin/ansible ]
+  then
+    _ansibleExec="/usr/bin/ansible" ; export _ansibleExec
+  fi
+  
+  if [ "${_ansibleExec}" == "" ]
+  then
+    /usr/bin/printf "Ansible is not installed on this system\n"
+    exit 1
+  fi
+  
+  . ${_Repo_Dir}/scripts/common_functions
   
   main
   
