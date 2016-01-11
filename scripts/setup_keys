@@ -22,7 +22,7 @@ then
   exit 1
 fi
 
-_RSAKeyFile=${HOME}.ssh/id_rsa ; export _RSAKeyFile
+_RSAKeyFile=${HOME}/.ssh/id_rsa ; export _RSAKeyFile
 
 if [ ! -e "${_InventoryFile}" ]
 then
