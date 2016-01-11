@@ -132,7 +132,12 @@ main()
 ################################################################################
 # Setup stuff prior to calling main().
 
-  /usr/bin/apt-get update
+  /usr/bin/sudo /bin/cat > /etc/sudoers.d/octt <<_EOD_
+# Give root privs to octt
+octt  ALL=(ALL) NOPASSWD:ALL
+_EOD_
+
+  sudo /usr/bin/apt-get update
   /usr/bin/apt-get upgrade -y
   /usr/bin/apt-get install -y ansible
 
