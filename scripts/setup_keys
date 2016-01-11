@@ -8,7 +8,7 @@
 while getopts "i:" opt
 do
   case $opt in
-    i) _RSAKeyFile=${OPTARG}
+    i) _InventoryFile=${OPTARG}
        ;;
     *) /usr/bin/printf "Invalid arguments\n"
        exit 1
@@ -16,24 +16,19 @@ do
 
 done
 
-if [ "${_RSAKeyFile}" == "" ]
+if [ "${_InventoryFile}" == "" ]
 then
   /usr/bin/printf "No hostfile specified\n"
   exit 1
 fi
 
-if [ ! -e "${_RSAKeyFile}" ]
+_RSAKeyFile=${HOME}.ssh/id_rsa ; export _RSAKeyFile
+
+if [ ! -e "${_InventoryFile}" ]
 then
   /usr/bin/printf "Hostfile %s does not exist.\n" "${_RSAKeyFile}"
   exit 1
 fi
-
-# Go to script directory.
-cd $(dirname ${0})
-cd ..
-
-# Derive the relative path to the Inventory file based on the current directory.
-_InventoryFile=$(pwd)/hosts
 
 # Function to generate new id_rsa keyfile.
 function generateKeyfile
