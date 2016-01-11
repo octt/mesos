@@ -45,6 +45,11 @@ then
   generateKeyFile
 fi
 
+/bin/cat > ${HOME}/.ssh/config
+host localhost
+  IdentityFile id_rsa
+  StrictHostKeyChecking no
+
 # Parse the list of Ansibl hosts and copy the id_rsa SSH key.
 /usr/bin/ansible all -i ${_InventoryFile} --list-hosts | \
 while read input
