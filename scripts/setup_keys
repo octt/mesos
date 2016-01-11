@@ -16,13 +16,13 @@ do
 
 done
 
-if [ "${_RSAKeyFile}" == "" ]
+if "${_RSAKeyFile}" == ""
 then
   /usr/bin/printf "No hostfile specified\n"
   exit 1
 fi
 
-if [ ! -e ${_RSAKeyFile} ]
+if [ ! -e "${_RSAKeyFile}" ]
 then
   /usr/bin/printf "Hostfile %s does not exist.\n" "${_RSAKeyFile}"
   exit 1
