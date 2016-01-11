@@ -31,7 +31,7 @@ then
 fi
 
 # Function to generate new id_rsa keyfile.
-function generateKeyfile
+function generateKeyFile
 {
   /usr/bin/ssh-keygen -b 8192 -N '' -C "Ansible Key"
 
