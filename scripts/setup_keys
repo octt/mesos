@@ -42,7 +42,7 @@ function generateKeyfile
 if [ ! -f ${_RSAKeyFile} ]
 then
   ls -l  ${_RSAKeyFile}
-  generateKeyFile
+  generateKeyFile()
 fi
 
 # Parse the list of Ansibl hosts and copy the id_rsa SSH key.
