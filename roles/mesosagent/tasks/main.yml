@@ -45,7 +45,7 @@
 
 - name: Create /etc/mesos/zk
   copy:
-    content="{{ octt.zookeeper.list }}/mesos"
+    content="{{ octt_facts.zookeeper_list.zklist }}/mesos"
     dest="{{ item }}"
     owner=root
     group=root
