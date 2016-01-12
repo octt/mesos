@@ -80,6 +80,7 @@
     - "/etc/marathon/conf/zk"
   when: mesos_master_server is defined and mesos_master_server
 
+
 - name: Create /etc/mesos-master/quorum
   copy:
     content="2"
