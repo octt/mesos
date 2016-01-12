@@ -70,7 +70,7 @@ host localhost
 _EOD_
 
 # Parse the list of Ansible hosts and copy the id_rsa SSH key.
-/usr/bin/ansible all -i ${_InventoryFile} --list-hosts | \
+${ansible} all -i ${_InventoryFile} --list-hosts | \
 while read input
 do
 
