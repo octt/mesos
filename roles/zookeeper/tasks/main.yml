@@ -5,7 +5,7 @@
   set_fact:
     node_type: zookeeper_server
     pkg_list: "[ 'zookeeper' ]"
-    services_list: "[ 'zookeeper' ]"
+    services_list: "[ 'zookeeper', 'zookeeper-bin', 'zookeeperd' ]"
   when:
     zookeeper_server is defined and zookeeper_server
 
