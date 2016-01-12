@@ -13,6 +13,11 @@
   debug:
     msg="{{ octt_facts }}"
   when: debugflag is defined and debugflag
+  
+- name: Show zookeeper fact
+  debug:
+    msg="{{ zookeeper }}"
+  when: debugflag is defined and debugflag
 
 - name: Import ubuntu keys.
   apt_key:
