@@ -11,6 +11,10 @@
   when:
     mesos_master_server is defined and mesos_master_server
 
+- name: Display mesos_master_server
+  debug:
+    msg="{{ mesos_master_server }}"
+  when: debugflag is defined and debugflag
 
 - name: Import ubuntu keys.
   apt_key:
