@@ -96,6 +96,8 @@ _EOD_
   fi
   /bin/cat ${_sshdir}/config
   
+  install_ansible
+  
   return
 }
 
