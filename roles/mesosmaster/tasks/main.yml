@@ -71,7 +71,7 @@
 
 - name: Create /etc/mesos/zk
   copy:
-    content="zk://{{ octt.zookeeper.list }}/marathon"
+    content="zk://{{ octt_facts.zookeeper_list.zklist }}/marathon"
     dest="{{ item }}"
     owner=root
     group=root
