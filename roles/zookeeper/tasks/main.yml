@@ -9,6 +9,10 @@
   when:
     zookeeper_server is defined and zookeeper_server
 
+- name: Show OCTT facts
+  debug:
+    msg="{{ octt_facts }}"
+  when: debugflag is defined and debugflag
 
 - name: Import ubuntu keys.
   apt_key:
