@@ -11,11 +11,13 @@
 - name: Create /etc/hosts
   template:
     src="hosts.j2"
-    dest="/tmp/hosts"
+    dest="/etc/hosts"
     owner=root
     group=root
     mode="0644"
+    backup=yes
 
 - name: Display OCTT vars
   debug:
     msg="{{ octt_facts.hostfile_list }}"
+  when: debugflag is defined
