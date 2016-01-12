@@ -15,3 +15,7 @@
     owner=root
     group=root
     mode="0644"
+
+- name: Display OCTT vars
+  debug:
+    msg="{{ octt_facts }}
