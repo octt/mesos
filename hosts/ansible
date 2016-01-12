@@ -6,12 +6,17 @@ lab04
 lab05
 lab06
 
-[mesos_servers]
-lab01
-lab02
-lab03
+[zookeeper_servers]
+zookeeper1
+zookeeper2
+zookeeper3
 
-[mesos_agents]
+[mesos_master_servers]
+mesosmaster1
+mesosmaster2
+mesosmaster3
+
+[mesos_agent_servers]
 mesosagent1
 mesosagent2
 mesosagent3
