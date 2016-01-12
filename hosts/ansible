@@ -1,15 +1,15 @@
 [common]
-lab201
-lab202
-lab203
-lab204
-lab205
-lab206
+lab01
+lab02
+lab03
+lab04
+lab05
+lab06
 
 [mesos_servers]
-lab201
-lab202
-lab203
+lab01
+lab02
+lab03
 
 [mesos_agents]
 mesosagent1
