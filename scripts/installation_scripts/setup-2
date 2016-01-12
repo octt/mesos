@@ -42,8 +42,9 @@ install_ansible()
 {
   cd
   sudo mkdir -p /usr/local/
-  sudo ( cd /usr/local \
-  /usr/bin/git clone git://github.com/ansible/ansible.git --recursive )
+  command="cd /usr/local"
+  command="${command} ; /usr/bin/git clone git://github.com/ansible/ansible.git --recursive )
+  $(sudo ${command})
   
   . /usr/local/ansible/hacking/env-setup
   sudo easy_install pip
