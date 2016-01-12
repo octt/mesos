@@ -1,0 +1,54 @@
+---
+
+# Create variables for each server type, allowing for the simple consolidation of functions.
+- name: Set facts
+  set_fact:
+    node_type: zookeeper_server
+    pkg_list: "[ 'zookeeper' ]"
+    services_list: "[ 'zookeeper' ]"
+  when:
+    zookeeper_server is defined and zookeeper_server
+
+
+- name: Import ubuntu keys.
+  apt_key:
+    keyserver=hkp://keyserver.ubuntu.com:80
+    id=E56151BF
+
+- name: Update Mesos Repository
+  apt_repository:
+    repo="deb http://repos.mesosphere.com/ubuntu vivid main"
+    update_cache="yes"
+
+- name: Install Packages.
+  apt:
+    name={{ item }}
+    state=latest
+    update_cache=yes
+  with_items: "{{ pkg_list }}"
+  when: zookeeper_server is defined and zookeeper_server
+
+- name: Create /etc/zookeeper/conf/myid
+  copy:
+    content="{{ zookeeper.id }}"
+    dest="/etc/zookeeper/conf/myid"
+    owner=root
+    group=root
+    mode-"0640"
+  when: zookeeper_server is defined and zookeeper_server
+
+- name: Creat /etc/zookeeper/conf/zoo.cfg
+  copy:
+    src="zoo.cfg"
+    dest="/etc/zookeeper/conf/zoo.cfg"
+    owner=root
+    group=root
+    mode="0644"
+  when: zookeeper_server is defined and zookeeper_server
+
+- name: Start Services
+  service:
+    name="{{ item }}"
+    state="started"
+  with_items: services_list
+  when: zookeeper_server is defined and zookeeper_server
