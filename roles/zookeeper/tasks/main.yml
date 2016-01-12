@@ -34,7 +34,7 @@
     dest="/etc/zookeeper/conf/myid"
     owner=root
     group=root
-    mode-"0640"
+    mode="0640"
   when: zookeeper_server is defined and zookeeper_server
 
 - name: Creat /etc/zookeeper/conf/zoo.cfg
