@@ -39,4 +39,4 @@ octt_facts:
 
 # Zookeeper configuration
   zookeeper_list:
-    zklist: "zk://10.0.5.20:2181,10.0.5.21:2181,10.0.5.22:2181"
+    zklist: "zk://zookeeper1:2181,zookeeper2:2181,zookeeper3:2181"

@@ -69,9 +69,9 @@
     - "/etc/marathon/conf/master"
   when: mesos_master_server is defined and mesos_master_server
 
-- name: Create /etc/mesos/zk
+- name: Create /etc/marathon/conf/zk
   copy:
-    content="zk://{{ octt_facts.zookeeper_list.zklist }}/marathon"
+    content="{{ octt_facts.zookeeper_list.zklist }}/marathon"
     dest="{{ item }}"
     owner=root
     group=root
