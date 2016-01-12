@@ -64,7 +64,7 @@ then
 fi
 
 /bin/cat > ${HOME}/.ssh/config <<_EOD_
-host localhost
+host *
   IdentityFile ${HOME}/.ssh/id_rsa
   StrictHostKeyChecking no
 _EOD_
