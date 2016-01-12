@@ -79,8 +79,9 @@ do
   cat <<_EOD_
   Working on host ${input}
 _EOD_
-
-  /usr/bin/ssh-copy-id -i ${HOME}/.ssh/id_rsa ${input}
+  command="/usr/bin/ssh-copy-id -i ${HOME}/.ssh/id_rsa ${input}"
+  /usr/bin/printf "%s\n" "${command}"
+  ${command}
 
 done
 
