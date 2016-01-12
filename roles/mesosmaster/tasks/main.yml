@@ -49,7 +49,7 @@
 
 - name: Create /etc/mesos/zk
   copy:
-    content="zk://{{ octt.zookeeper.list }}/mesos"
+    content="zk://{{ octt_facts.zookeeper_list.zklist }}/mesos"
     dest="{{ item }}"
     owner=root
     group=root
@@ -60,7 +60,7 @@
 
 - name: Create /etc/marathon/conf/master
   copy:
-    content="zk://{{ octt.zookeeper.list }}/mesos"
+    content="zk://{{ octt_facts.zookeeper_list.zklist }}/mesos"
     dest="{{ item }}"
     owner=root
     group=root
