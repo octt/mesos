@@ -30,6 +30,24 @@ then
   exit 1
 fi
 
+ansible="undefined" 
+
+if [ -x "/usr/bin/ansible" ]
+then
+  ansible="/usr/bin/ansible"
+fi
+
+if [ -x "/usr/local/ansible/bin/ansible" ]
+then
+  ansible="/usr/local/ansible/bin/ansible"
+fi
+
+if [ "${ansible}" == "undefined" ]
+then
+  /usr/bin/printf "ansible executable not found on this system\n"
+  exit 1
+fi
+
 # Function to generate new id_rsa keyfile.
 function generateKeyFile
 {
