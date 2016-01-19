@@ -26,7 +26,7 @@ _RSAKeyFile=${HOME}/.ssh/id_rsa ; export _RSAKeyFile
 
 if [ ! -e "${_InventoryFile}" ]
 then
-  /usr/bin/printf "Hostfile %s does not exist.\n" "${_RSAKeyFile}"
+  /usr/bin/printf "Hostfile %s does not exist.\n" "${_InventoryFile}"
   exit 1
 fi
 
