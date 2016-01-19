@@ -133,7 +133,7 @@ main()
 
 
   
-  /usr/bin/clear ; ${_Repo_Dir}/scripts/setup_keys -i localhost
+  /usr/bin/clear ; ${_Repo_Dir}/scripts/setup_keys -i ~/mesos/localhost
 
   # Location of the default SSH directory
   _sshdir="${HOME}/.ssh" ; export _sshdir
