@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 # setup (version 0.1)
 _version='0.1' ; export _version
