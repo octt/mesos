@@ -97,7 +97,7 @@ _EOD_
   fi
   /bin/cat ${_sshdir}/config
   
-  install_ansible
+
   
   return
 }
@@ -120,6 +120,8 @@ main()
   
   pause "setup-2.main"
 
+  install_ansible
+  
   /usr/bin/clear ; ${_Repo_Dir}/scripts/setup_keys -i localhost
 
   # Location of the default SSH directory
