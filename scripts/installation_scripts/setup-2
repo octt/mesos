@@ -55,6 +55,7 @@ install_ansible()
   
   sudo apt-get install -y python-pip
   sudo pip install paramiko PyYAML Jinja2 httplib2 six
+  cd /usr/local/ansible/hacking
   . /usr/local/ansible/hacking/env-setup
     
   read -p "Insstalling Ansible" uinput
