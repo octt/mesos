@@ -57,7 +57,7 @@
 
 - name: Start Services
   service:
-    name="{{ item }}"
+    name="{{ item }}.service"
     state="started"
   with_items: services_list
   when: zookeeper_server is defined and zookeeper_server
