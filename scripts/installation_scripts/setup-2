@@ -119,7 +119,7 @@ main()
 {
   # Setup traps for any unexpected errors.
   set -e
-  trap 'abort "A critical failure has occurred."' EXIT
+  trap 'abort "A critical failure has occurred." "$LINENO"' EXIT
 
   clearscreen
   

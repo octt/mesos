@@ -16,7 +16,7 @@ _pause=5 ; export _pause
 abort()
 {
 
-  _message=${1}
+  _message="${1} ${2}"
   
   /bin/cat <<_EOD_
   
