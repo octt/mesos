@@ -42,21 +42,26 @@ install_ansible()
 {
 
   read -p "Insstalling Ansible" uinput
-  cd
-  sudo mkdir -p /usr/local/ansible
-  sudo chown octt:octt /usr/local/ansible
-  cd /usr/local/
-  if [ ! -d /usr/local/ansible ]
-  then
-    /usr/bin/git clone git://github.com/ansible/ansible.git --recursive
-  else
-    ( cd /usr/local/ansible ; git pull)
-  fi
+  #cd
+  #sudo mkdir -p /usr/local/ansible
+  #sudo chown octt:octt /usr/local/ansible
+  #cd /usr/local/
+  #if [ ! -d /usr/local/ansible ]
+  #then
+    #/usr/bin/git clone git://github.com/ansible/ansible.git --recursive
+  #else
+    #( cd /usr/local/ansible ; git pull)
+  #fi
   
   sudo apt-get install -y python-pip
   sudo pip install paramiko PyYAML Jinja2 httplib2 six
   cd /usr/local/ansible/hacking
-  . /usr/local/ansible/hacking/env-setup
+  #. /usr/local/ansible/hacking/env-setup
+  
+  sudo apt-get install software-properties-common
+  sudo apt-add-repository ppa:ansible/ansible
+  sudo apt-get update
+  sudo apt-get install ansible
     
   read -p "Insstalling Ansible" uinput
   return
