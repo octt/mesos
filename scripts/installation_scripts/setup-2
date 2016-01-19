@@ -130,7 +130,7 @@ main()
   
   pause "setup-2.main"
 
-  install_ansible
+
   
   /usr/bin/clear ; ${_Repo_Dir}/scripts/setup_keys -i localhost
 
@@ -181,7 +181,9 @@ _EOD_
     _Repo_Dir="${HOME}/mesos" ; export _Repo_Dir
     cd ${_Repo_Dir}
   fi
-  
+
+  install_ansible
+
 # Setup the Ansible path.
   if [ -x /usr/local/bin/ansible ]
   then
