@@ -40,6 +40,7 @@ _EOD_
 
 install_ansible()
 {
+  set -x
   read -p "Insstalling Ansible" uinput
   cd
   sudo mkdir -p /usr/local/ansible
