@@ -40,7 +40,7 @@ _EOD_
 
 install_ansible()
 {
-  set -x
+
   read -p "Insstalling Ansible" uinput
   cd
   sudo mkdir -p /usr/local/ansible
@@ -66,6 +66,7 @@ install_ansible()
 setup_dotssh_dir()
 {
 
+  cd ~/mesos 
   [ -n ${debug-''} ] && /usr/bin/printf "Setup %s ssh directory\n"
   
   if [ ! -d "${_sshdir}" ]
@@ -190,7 +191,7 @@ _EOD_
     _ansibleExec="/usr/local/ansible/bin/ansible" ; export _ansibleExec
   fi
   
-  if [ -x /usr/local/bin/ansible ]
+if [ -x /usr/local/bin/ansible ]
   then
     _ansibleExec="/usr/bin/ansible" ; export _ansibleExec
   fi
