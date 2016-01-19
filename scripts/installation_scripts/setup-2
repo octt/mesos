@@ -40,6 +40,7 @@ _EOD_
 
 install_ansible()
 {
+  pause 'Installing Ansible'
   cd
   sudo mkdir -p /usr/local/ansible
   sudo chown octt:octt /usr/local/ansible
@@ -52,6 +53,7 @@ install_ansible()
   . /usr/local/ansible/hacking/env-setup
   sudo apt-get install -y python-pip
   sudo pip install paramiko PyYAML Jinja2 httplib2 six
+  pause 'done Installing Ansible'
   return
 }
 ################################################################################
