@@ -1,2 +1,2 @@
 [program:mesos-slave]
-command=/usr/sbin/mesos-slave --hostname="{{ mesos_agent_name }}" --master=file:///etc/mesos/zk
+command=/usr/sbin/mesos-slave --hostname="{{ mesos_agent_name }}" --ip="{{ mesos_agent_name }}" --master=file:///etc/mesos/zk
