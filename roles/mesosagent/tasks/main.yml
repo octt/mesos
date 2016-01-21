@@ -65,6 +65,14 @@
   with_items: "{{ mesos_zk_list }}"
   when: mesos_agent_server is defined and mesos_agent_server
 
+- name: Create supervisord control file
+  copy:
+    src="mesos-slave.supervisor"
+    dst="/etc/supervisor/conf.d/mesos-slave.supervisor"
+    owner=root
+    group=root
+    mode="0640"
+
 - name: Start Services
   service:
     name="{{ item }}"
