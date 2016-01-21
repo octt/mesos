@@ -66,8 +66,8 @@
   when: mesos_agent_server is defined and mesos_agent_server
 
 - name: Create supervisord control file
-  copy:
-    src="roles/mesosagent/files/mesos-slave.supervisor"
+  template:
+    src="mesos-slave.supervisor.j2"
     dest="/etc/supervisor/conf.d/mesos-slave.conf"
     owner=root
     group=root
