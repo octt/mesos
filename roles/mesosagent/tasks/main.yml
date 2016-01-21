@@ -5,10 +5,10 @@
 - name: Set facts for mesos_agents
   set_fact:
     node_type: mesos_agent
-    pkg_list: "[ 'mesos', 'supervisord' ]"
+    pkg_list: "[ 'mesos', 'supervisor' ]"
     mesos_zk_list: "[ '/etc/init/zookeeper.override', '/etc/init/mesos-master.override' ]"
     mesos_hostname_files: "[ '/etc/mesos-slave/ip', '/etc/mesos-slave/hostname' ]"
-    services_list: "[ 'mesos-slave' ]"
+    services_list: "[ 'supervisor' ]"
   when:
     mesos_agent_server is defined and mesos_agent_server
 
