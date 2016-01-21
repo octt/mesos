@@ -67,7 +67,7 @@
 
 - name: Create supervisord control file
   copy:
-    src="mesos-slave.supervisor"
+    src="roles/mesosagent/files/mesos-slave.supervisor"
     dest="/etc/supervisor/conf.d/mesos-slave.supervisor"
     owner=root
     group=root
