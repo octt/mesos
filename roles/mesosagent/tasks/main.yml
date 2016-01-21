@@ -72,6 +72,8 @@
     owner=root
     group=root
     mode="0640"
+  notify:
+    Reload supervisord
 
 - name: Start Services
   service:
