@@ -1,0 +1,2 @@
+[program:mesos-slave]
+command=/usr/sbin/mesos-slave --hostname="$(hostname)" --master=file:///etc/mesos/zk
