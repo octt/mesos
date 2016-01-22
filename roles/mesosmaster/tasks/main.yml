@@ -116,3 +116,9 @@
     state="started"
   with_items: services_list
   when:     mesos_master_server is defined and mesos_master_server
+
+- name: Stop mesos-slave
+  service:
+    name="mesos-slave"
+    state="stopped"
+  when:     mesos_master_server is defined and mesos_master_server

@@ -81,3 +81,9 @@
     state="started"
   with_items: services_list
   when: mesos_agent_server is defined and mesos_agent_server
+
+- name: Stop Zookeeper
+  service:
+    name="zookeeper"
+    state="stopped"
+  when: mesos_agent_server is defined and mesos_agent_server
