@@ -65,6 +65,24 @@
   with_items: "{{ mesos_zk_list }}"
   when: mesos_agent_server is defined and mesos_agent_server
 
+- name: Containerizers
+  copy:
+    content="docker,mesos"
+    dest="/etc/mesos-slave/containerizers"
+    owner=root
+    group=root
+    mode="0640"
+  when: mesos_agent_server is defined and mesos_agent_server
+
+- name: Executor Registration Timeout
+  copy:
+    content="5mins"
+    dest="/etc/mesos-slave/exectutor_registration_timeout"
+    owner=root
+    group=root
+    mode="0640"
+  when: mesos_agent_server is defined and mesos_agent_server
+
 - name: Create supervisord control file
   template:
     src="mesos-slave.supervisor.j2"
