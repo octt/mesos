@@ -18,7 +18,6 @@
     backup=yes
 
 - name: Set hostname
-  hosts: common
   hostname: "{{ hostname }}"
 
 - name: Display OCTT vars
