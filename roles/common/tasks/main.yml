@@ -19,7 +19,7 @@
 
 - name: Set hostname
   hosts: common
-  hostname: {{ hostname }}
+  hostname: "{{ hostname }}"
 
 - name: Display OCTT vars
   debug:
