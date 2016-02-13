@@ -10,12 +10,12 @@
 #     Nameserver for DNS - ns1
 octt_facts:
   hostfile_list:
-    - "192.168.1.4     lab201 zookeeper1 mesosmaster1 marathon1 ns1"
-    - "192.168.1.49    lab202 zookeeper2 mesosmaster2 marathon2"
-    - "192.168.1.50    lab203 zookeeper3 mesosmaster3 marathon3"
-    - "192.168.1.51    lab204 mesosagent1"
-    - "192.168.1.52    lab205 mesosagent2"
-    - "192.168.1.53    lab206 mesosagent3"
+    - "192.168.1.4     lab01 zookeeper1 mesosmaster1 marathon1 ns1"
+    - "192.168.1.49    lab02 zookeeper2 mesosmaster2 marathon2"
+    - "192.168.1.50    lab03 zookeeper3 mesosmaster3 marathon3"
+    - "192.168.1.51    lab04 mesosagent1"
+    - "192.168.1.52    lab05 mesosagent2"
+    - "192.168.1.53    lab06 mesosagent3"
 
 # Customize local network and DNS configuration.
 #
